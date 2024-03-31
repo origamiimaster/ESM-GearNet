@@ -14,3 +14,36 @@ dataset:
       - class: TruncateProtein
         max_length: 550
 
+task:
+  class: MultipleBinaryClassification
+  model:
+    class: FusionNetwork
+    sequence_model:
+      class: ESM
+      path: ~/scratch/protein-model-weights/esm-model-weights/
+      model: ESM-2-650M
+    structure_model:
+      class: GearNet
+      input_dim: 1280
+      hidden_dims: [512, 512, 512, 512, 512, 512]
+      batch_norm: True
+      concat_hidden: True
+      short_cut: True
+      readout: 'sum'
+      num_relation: 7
+  graph_construction_model:
+    class: GraphConstruction
+    node_layers:
+      - class: AlphaCarbonNode
+    edge_layers:
+      - class: SequentialEdge
+        max_distance: 2
+      - class: SpatialEdge
+        radius: 10.0
+        min_distance: 5
+      - class: KNNEdge
+        k: 10
+        min_distance: 5
+  criterion: bce
+  num_mlp_layer: 3
+  metric: ['auprc@micro', 'f1_max']
