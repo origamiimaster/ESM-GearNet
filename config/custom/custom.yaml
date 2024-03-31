@@ -1,0 +1,16 @@
+output_dir: ~/scratch/custom_output
+
+dataset:
+  class: EnzymeCommission
+  path: ~/scratch/protein-datasets/
+  test_cutoff: 0.95
+  atom_feature: null
+  bond_feature: null
+  transform:
+    class: Compose
+    transforms:
+      - class: ProteinView
+        view: residue
+      - class: TruncateProtein
+        max_length: 550
+
