@@ -158,12 +158,12 @@ class MyDataSet(data.ProteinDataset):
 
 
 if __name__ == "__main__":
-    args, vars = util.parse_args()
-    cfg = util.load_config(args.config, context=vars)
+    # args, vars = util.parse_args()
+    cfg = util.load_config("config/custom/custom.yaml", context={})
     working_dir = util.create_working_directory(cfg)
 
     # Set seed:
-    seed = args.seed
+    seed = 1024 # args.seed
     torch.manual_seed(seed + comm.get_rank())
     os.environ['PYTHONHASHSEED'] = str(seed)
     random.seed(seed)
@@ -176,3 +176,5 @@ if __name__ == "__main__":
     torch.backends.cudnn.benchmark = False
 
     dataset = core.Configurable.load_config_dict(cfg.dataset)
+
+    solver, scheduler = util.build_downstream_solver(cfg, dataset)
