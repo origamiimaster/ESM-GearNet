@@ -161,7 +161,12 @@ class MyDataSet(data.ProteinDataset):
 @R.register("datasets.MiniAlphaFoldDB")
 @utils.copy_args(data.ProteinDataset.load_pdbs)
 class MiniAlphaFoldDB(AlphaFoldDB):
-    pass
+    def __init__(self, path, test_cutoff=0.95, verbose=1, **kwargs):
+        super().__init__(path, test_cutoff, verbose, **kwargs)
+        print(self.__len__())
+
+
+
 
 
 @R.register("transforms.CustomNoiseTransform")
