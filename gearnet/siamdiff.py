@@ -26,15 +26,6 @@ class NoiseTransform(core.Configurable):
         graph.node_position = graph.node_position + perturb_noise * self.sigma
         item["graph2"] = graph
         return item
-    
-@R.register("transforms.CustomNoiseTransform")
-class CustomNoiseTransform(core.Configurable):
-    def __init__(self, sigma=0.3):
-        self.sigma = sigma
-    
-    def __call__(self, item):
-        # Graph item needs specific perturbations
-        pass
 
 @R.register("tasks.SiamDiff")
 class SiamDiff(tasks.Task, core.Configurable):

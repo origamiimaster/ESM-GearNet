@@ -12,6 +12,7 @@ from torch.optim import lr_scheduler
 from torch.utils import data as torch_data
 
 from torchdrug import core, models, tasks, datasets, utils, data
+from torchdrug.datasets import AlphaFoldDB
 from torchdrug.utils import comm
 from torchdrug.core import Registry as R
 
@@ -154,6 +155,28 @@ class MyDataSet(data.ProteinDataset):
         values = torch.ones(len(self.pos_targets[index]))
         item["targets"] = utils.sparse_coo_tensor(indices, values,
                                                   (len(self.tasks),)).to_dense()
+        return item
+
+
+@R.register("datasets.MiniAlphaFoldDB")
+@utils.copy_args(data.ProteinDataset.load_pdbs)
+class MiniAlphaFoldDB(AlphaFoldDB):
+    pass
+
+
+@R.register("transforms.CustomNoiseTransform")
+class CustomNoiseTransform(core.Configurable):
+    def __init__(self, sigma=0.3):
+        self.sigma = sigma
+
+    def __call__(self, item):
+        # Graph item needs specific perturbations
+        graph = item["graph"].clone()
+        b_factor = graph.b_factor.unsqueeze(0) / 100
+        perturb_noise = torch.randn_like(graph.node_position)
+        perturb_noise = b_factor * perturb_noise
+        graph.node_position = graph.node_position + perturb_noise * self.sigma
+        item["graph2"] = graph
         return item
 
 
