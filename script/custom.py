@@ -180,8 +180,9 @@ class MiniAlphaFoldDB(AlphaFoldDB):
         **kwargs
     """
 
-    def __init__(self, path, test_cutoff=0.95, verbose=1, **kwargs):
-        super().__init__(path, test_cutoff, verbose, **kwargs)
+    def __init__(self, path, species_id=0, split_id=0, verbose=1, **kwargs):
+        super().__init__(path, species_id=0, split_id=0, verbose=1, **kwargs)
+
         print(self.__len__())
 
 
