@@ -161,6 +161,25 @@ class MyDataSet(data.ProteinDataset):
 @R.register("datasets.MiniAlphaFoldDB")
 @utils.copy_args(data.ProteinDataset.load_pdbs)
 class MiniAlphaFoldDB(AlphaFoldDB):
+    """
+    3D protein structures predicted by AlphaFold.
+    This dataset covers proteomes of 48 organisms, as well as the majority of Swiss-Prot.
+
+    Statistics:
+        See https://alphafold.ebi.ac.uk/download
+
+    Parameters:
+        path (str): path to store the dataset
+        species_id (int, optional): the id of species to be loaded. The species are numbered
+            by the order appeared on https://alphafold.ebi.ac.uk/download (0-20 for model
+            organism proteomes, 21 for Swiss-Prot)
+        split_id (int, optional): the id of split to be loaded. To avoid large memory consumption
+            for one dataset, we have cut each species into several splits, each of which contains
+            at most 22000 proteins.
+        verbose (int, optional): output verbose level
+        **kwargs
+    """
+
     def __init__(self, path, test_cutoff=0.95, verbose=1, **kwargs):
         super().__init__(path, test_cutoff, verbose, **kwargs)
         print(self.__len__())
